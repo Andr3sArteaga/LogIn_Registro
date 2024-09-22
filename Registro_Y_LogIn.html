@@ -1,0 +1,441 @@
+<html><head><base href="https://websim.example.com/dark-neon-auth-app-red-toggle/" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Autenticación de Usuario - Estilo Oscuro y Neón</title>
+    <!-- Firebase App (core SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Google Platform Library -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- Facebook SDK -->
+    <script src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Orbitron', sans-serif;
+    }
+    
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #0f0f0f;
+        color: #fff;
+    }
+    
+    .container {
+        position: relative;
+        width: 100%;
+        max-width: 370px;
+        padding: 25px;
+        border-radius: 8px;
+        background-color: rgba(26, 26, 26, 0.8);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+    
+    .container header {
+        font-size: 22px;
+        font-weight: 600;
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    form .field {
+        margin-bottom: 20px;
+    }
+    
+    form .input-field {
+        position: relative;
+        height: 55px;
+        width: 100%;
+    }
+    
+    .input-field input {
+        height: 100%;
+        width: 100%;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        padding: 0 15px;
+        background-color: rgba(42, 42, 42, 0.8);
+        color: #fff;
+        font-size: 16px;
+        border: 1px solid #ff0000;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    }
+    
+    .input-field input:focus {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    
+    .button {
+        margin: 25px 0 6px;
+    }
+    
+    .button input, #logout-btn, .toggle-form-btn {
+        width: 100%;
+        height: 55px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        background-color: rgba(255, 0, 0, 0.8);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        text-shadow: 0 0 5px #fff;
+    }
+    
+    .button input:hover, #logout-btn:hover, .toggle-form-btn:hover {
+        background-color: rgba(255, 51, 51, 0.8);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    }
+    
+    .social-login {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .social-btn {
+        margin: 10px 0;
+        font-size: 14px;
+        width: 100%;
+        height: 55px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        border: 2px solid;
+    }
+    
+    #google-login {
+        color: #fbbc05;
+        border-color: #fbbc05;
+    }
+    
+    #facebook-login {
+        color: #1877f2;
+        border-color: #1877f2;
+    }
+    
+    #phone-login {
+        color: #00c853;
+        border-color: #00c853;
+    }
+    
+    #logout-btn {
+        display: none;
+        margin-top: 20px;
+        background-color: rgba(255, 51, 51, 0.8);
+    }
+    
+    #welcome-message {
+        display: none;
+        text-align: center;
+        font-size: 24px;
+        margin-top: 20px;
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000;
+    }
+    
+    .toggle-form-btn {
+        margin-top: 10px;
+        background-color: rgba(255, 0, 0, 0.8);
+    }
+    
+    @keyframes neon-glow-google {
+        0% {
+            box-shadow: 0 0 5px #fbbc05, 0 0 10px #fbbc05, 0 0 15px #fbbc05, 0 0 20px #fbbc05;
+        }
+        50% {
+            box-shadow: 0 0 10px #fbbc05, 0 0 20px #fbbc05, 0 0 30px #fbbc05, 0 0 40px #fbbc05;
+        }
+        100% {
+            box-shadow: 0 0 5px #fbbc05, 0 0 10px #fbbc05, 0 0 15px #fbbc05, 0 0 20px #fbbc05;
+        }
+    }
+    
+    @keyframes neon-glow-facebook {
+        0% {
+            box-shadow: 0 0 5px #1877f2, 0 0 10px #1877f2, 0 0 15px #1877f2, 0 0 20px #1877f2;
+        }
+        50% {
+            box-shadow: 0 0 10px #1877f2, 0 0 20px #1877f2, 0 0 30px #1877f2, 0 0 40px #1877f2;
+        }
+        100% {
+            box-shadow: 0 0 5px #1877f2, 0 0 10px #1877f2, 0 0 15px #1877f2, 0 0 20px #1877f2;
+        }
+    }
+    
+    @keyframes neon-glow-phone {
+        0% {
+            box-shadow: 0 0 5px #00c853, 0 0 10px #00c853, 0 0 15px #00c853, 0 0 20px #00c853;
+        }
+        50% {
+            box-shadow: 0 0 10px #00c853, 0 0 20px #00c853, 0 0 30px #00c853, 0 0 40px #00c853;
+        }
+        100% {
+            box-shadow: 0 0 5px #00c853, 0 0 10px #00c853, 0 0 15px #00c853, 0 0 20px #00c853;
+        }
+    }
+    
+    @keyframes neon-glow-red {
+        0% {
+            box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff0000;
+        }
+        50% {
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+        }
+        100% {
+            box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff0000;
+        }
+    }
+    
+    #google-login:hover {
+        color: #fff;
+        background-color: rgba(251, 188, 5, 0.8);
+        animation: neon-glow-google 1.5s ease-in-out infinite alternate;
+    }
+    
+    #facebook-login:hover {
+        color: #fff;
+        background-color: rgba(24, 119, 242, 0.8);
+        animation: neon-glow-facebook 1.5s ease-in-out infinite alternate;
+    }
+    
+    #phone-login:hover {
+        color: #fff;
+        background-color: rgba(0, 200, 83, 0.8);
+        animation: neon-glow-phone 1.5s ease-in-out infinite alternate;
+    }
+    
+    .button input:hover, #logout-btn:hover, .toggle-form-btn:hover {
+        animation: neon-glow-red 1.5s ease-in-out infinite alternate;
+    }
+    </style>
+    </head>
+    <body>
+        <div class="container">
+            <header id="form-header">Registro</header>
+            <form id="register-form">
+                <div class="field email-field">
+                    <div class="input-field">
+                        <input type="email" placeholder="Ingresa tu correo electrónico" class="email" id="email-input">
+                    </div>
+                </div>
+                <div class="field create-password">
+                    <div class="input-field">
+                        <input type="password" placeholder="Crea una contraseña" class="password" id="password-input">
+                    </div>
+                </div>
+                <div class="field confirm-password">
+                    <div class="input-field">
+                        <input type="password" placeholder="Confirma tu contraseña" class="cPassword" id="confirm-password-input">
+                    </div>
+                </div>
+                <div class="input-field button">
+                    <input type="submit" value="Registrar">
+                </div>
+            </form>
+            <form id="login-form" style="display: none;">
+                <div class="field email-field">
+                    <div class="input-field">
+                        <input type="email" placeholder="Ingresa tu correo electrónico" class="email" id="login-email-input">
+                    </div>
+                </div>
+                <div class="field create-password">
+                    <div class="input-field">
+                        <input type="password" placeholder="Ingresa tu contraseña" class="password" id="login-password-input">
+                    </div>
+                </div>
+                <div class="input-field button">
+                    <input type="submit" value="Iniciar Sesión">
+                </div>
+            </form>
+            <button class="toggle-form-btn" id="toggle-form-btn">Cambiar a Iniciar Sesión</button>
+            <div class="social-login">
+                <button id="google-login" class="social-btn">Iniciar sesión con Google</button>
+                <button id="facebook-login" class="social-btn">Iniciar sesión con Facebook</button>
+                <button id="phone-login" class="social-btn">Iniciar sesión con teléfono</button>
+            </div>
+            <button id="logout-btn">Cerrar Sesión</button>
+            <div id="welcome-message"></div>
+        </div>
+    
+    <script>
+    // Configuración de Firebase (reemplaza con tus propias credenciales)
+    const firebaseConfig = {
+        apiKey: "AIzaSyC3BXrNR7smWsw61C2LJ29IhFrNZ4-Yu20",
+        authDomain: "proyectoi-b42fe.firebaseapp.com",
+        projectId: "proyectoi-b42fe",
+        storageBucket: "proyectoi-b42fe.appspot.com",
+        messagingSenderId: "671781870262",
+        appId: "1:671781870262:web:7d0083b28c5cd6ae5a2417",
+        measurementId: "G-TSFMXB872W"
+    };
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Referencias a elementos del DOM
+    const registerForm = document.getElementById('register-form');
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email-input');
+    const passwordInput = document.getElementById('password-input');
+    const confirmPasswordInput = document.getElementById('confirm-password-input');
+    const loginEmailInput = document.getElementById('login-email-input');
+    const loginPasswordInput = document.getElementById('login-password-input');
+    const googleLoginBtn = document.getElementById('google-login');
+    const facebookLoginBtn = document.getElementById('facebook-login');
+    const phoneLoginBtn = document.getElementById('phone-login');
+    const logoutBtn = document.getElementById('logout-btn');
+    const welcomeMessage = document.getElementById('welcome-message');
+    const toggleFormBtn = document.getElementById('toggle-form-btn');
+    const formHeader = document.getElementById('form-header');
+    
+    let isLoginForm = false;
+    
+    // Función para mostrar mensaje de bienvenida
+    function showWelcomeMessage(user) {
+        welcomeMessage.textContent = `Hello World! ¡Hola, ${user.displayName || user.email}!`;
+        welcomeMessage.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'none';
+        toggleFormBtn.style.display = 'none';
+        document.querySelectorAll('.social-btn').forEach(btn => btn.style.display = 'none');
+    }
+    
+    // Función para ocultar mensaje de bienvenida
+    function hideWelcomeMessage() {
+        welcomeMessage.style.display = 'none';
+        logoutBtn.style.display = 'none';
+        registerForm.style.display = 'block';
+        toggleFormBtn.style.display = 'block';
+        document.querySelectorAll('.social-btn').forEach(btn => btn.style.display = 'block');
+    }
+    
+    // Toggle entre formularios de registro e inicio de sesión
+    toggleFormBtn.addEventListener('click', () => {
+        isLoginForm = !isLoginForm;
+        if (isLoginForm) {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            formHeader.textContent = 'Iniciar Sesión';
+            toggleFormBtn.textContent = 'Cambiar a Registro';
+        } else {
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+            formHeader.textContent = 'Registro';
+            toggleFormBtn.textContent = 'Cambiar a Iniciar Sesión';
+        }
+    });
+    
+    // Registro de usuario
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+    
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+    
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                showWelcomeMessage(userCredential.user);
+            })
+            .catch((error) => {
+                console.error('Error al registrar:', error);
+            });
+    });
+    
+    // Inicio de sesión
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = loginEmailInput.value;
+        const password = loginPasswordInput.value;
+    
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                showWelcomeMessage(userCredential.user);
+            })
+            .catch((error) => {
+                console.error('Error al iniciar sesión:', error);
+            });
+    });
+    
+    // Autenticación con Google
+    googleLoginBtn.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                showWelcomeMessage(result.user);
+            }).catch((error) => {
+                console.error('Error al iniciar sesión con Google:', error);
+            });
+    });
+    
+    // Autenticación con Facebook
+    facebookLoginBtn.addEventListener('click', () => {
+        const provider = new firebase.auth.FacebookAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                showWelcomeMessage(result.user);
+            }).catch((error) => {
+                console.error('Error al iniciar sesión con Facebook:', error);
+            });
+    });
+    
+    // Autenticación con número de teléfono
+    phoneLoginBtn.addEventListener('click', () => {
+        const phoneNumber = prompt("Por favor, ingresa tu número de teléfono con código de país:");
+        const appVerifier = new firebase.auth.RecaptchaVerifier('phone-login', {
+            'size': 'invisible'
+        });
+        
+        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                const verificationCode = prompt("Por favor, ingresa el código de verificación:");
+                return confirmationResult.confirm(verificationCode);
+            })
+            .then((result) => {
+                showWelcomeMessage(result.user);
+            })
+            .catch((error) => {
+                console.error('Error al iniciar sesión con teléfono:', error);
+            });
+    });
+    
+    // Cerrar sesión
+    logoutBtn.addEventListener('click', () => {
+        firebase.auth().signOut().then(() => {
+            hideWelcomeMessage();
+        }).catch((error) => {
+            console.error('Error al cerrar sesión:', error);
+        });
+    });
+    
+    // Observador de estado de autenticación
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            showWelcomeMessage(user);
+        } else {
+            hideWelcomeMessage();
+        }
+    });
+    </script>
+    </body></html>
+    
